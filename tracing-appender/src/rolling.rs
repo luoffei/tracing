@@ -34,7 +34,7 @@ use std::{
     path::{Path, PathBuf},
     sync::atomic::{AtomicUsize, Ordering},
 };
-use time::{format_description, Date, Duration, OffsetDateTime, Time};
+use time::{ext::NumericalDuration, format_description, Date, Duration, OffsetDateTime, Time};
 
 mod builder;
 pub use builder::{Builder, InitError};
@@ -192,7 +192,7 @@ impl RollingFileAppender {
             ref max_files,
         } = builder;
         let directory = directory.as_ref().to_path_buf();
-        let now = OffsetDateTime::now_utc();
+        let now = OffsetDateTime::now_utc().checked_add(8.hours()).unwrap();
         let (state, writer) = Inner::new(
             now,
             rotation.clone(),
